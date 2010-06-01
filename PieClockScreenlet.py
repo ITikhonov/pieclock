@@ -56,8 +56,8 @@ class PieClockScreenlet (Screenlet):
 		ctx.scale(self.width/2,self.height/2)
 		ctx.translate(1,1)
 
-		self._color_yd = (0.5,0.2,0.2)
-		self._color_md = (0.2,0.2,1.0)
+		self._color_yd = (0.0,0.0,0.0)
+		self._color_md = (0.2,0.2,0.0)
 		self._color_wd = (0.5,0.0,1.0)
 		self._color_hr = (0.0,0.5,1.0)
 		self._color_mn = (0.0,0.5,0.0)
@@ -68,9 +68,9 @@ class PieClockScreenlet (Screenlet):
 		mr=monthrange(now.year,now.month)[1]
 		dr=365+isleap(now.year)
 
-		circle(ctx, 4,  0.95,0.05, self._color_yd, (now-datetime(now.year,1,1)).days/float(dr))
-		circle(ctx, mr,  0.85,0.05, self._color_md, now.day+now.hour/24.0+now.minute/(24*60.0), 1)
-		circle(ctx, 7,  0.7,0.1, self._color_wd, now.weekday()+now.hour/24.0+now.minute/(24*60.0))
+		circle(ctx, 4,  0.9,0.1, self._color_yd, (now-datetime(now.year,1,1)).days/float(dr))
+		circle(ctx, mr,  0.8,0.1, self._color_md, now.day+now.hour/24.0+now.minute/(24*60.0), 2)
+		circle(ctx, 7,  0.65,0.1, self._color_wd, now.weekday()+now.hour/24.0+now.minute/(24*60.0))
 		circle(ctx, 24, 0.4,0.2, self._color_hr, now.hour+now.minute/60.0, 4)
 		circle(ctx, 3, 0.2,0.1, self._color_mn, now.minute/20.0)
 		circle(ctx, 3, 0.01,0.1, self._color_sc, (now.second + now.microsecond/1000000.0)/20.0 )
