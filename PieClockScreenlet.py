@@ -11,6 +11,8 @@ from math import pi
 from datetime import datetime
 from gobject import timeout_add
 
+from calendar import monthrange,isleap
+
 def deg(a): return a*(pi/180)
 
 def circle(ctx,parts,r,w,c,v,b=10):
@@ -19,7 +21,7 @@ def circle(ctx,parts,r,w,c,v,b=10):
 	for i in range(0,parts):
 		pie(ctx,(wl*i,wl*i+wl-b),(r,r+w),c)
 	ctx.set_operator(OPERATOR_DEST_OUT)
-	pie(ctx, (0,wl*int(v) + (wl-b)*(v-int(v)) ), (r-0.1,r+w+0.1),(1.0,1.0,1.0,0.8))
+	pie(ctx, (0,wl*int(v) + (wl-b)*(v-int(v)) ), (r-0.01,r+w+0.01),(1.0,1.0,1.0,0.8))
 
 def pie(ctx,a,r,c):
 	a=deg(a[0]-90),deg(a[1]-90)
@@ -54,6 +56,8 @@ class PieClockScreenlet (Screenlet):
 		ctx.scale(self.width/2,self.height/2)
 		ctx.translate(1,1)
 
+		self._color_yd = (0.5,0.2,0.2)
+		self._color_md = (0.2,0.2,1.0)
 		self._color_wd = (0.5,0.0,1.0)
 		self._color_hr = (0.0,0.5,1.0)
 		self._color_mn = (0.0,0.5,0.0)
@@ -61,6 +65,11 @@ class PieClockScreenlet (Screenlet):
 
 		now=datetime.now()
 
+		mr=monthrange(now.year,now.month)[1]
+		dr=365+isleap(now.year)
+
+		circle(ctx, 4,  0.95,0.05, self._color_yd, (now-datetime(now.year,1,1)).days/float(dr))
+		circle(ctx, mr,  0.85,0.05, self._color_md, now.day+now.hour/24.0+now.minute/(24*60.0), 1)
 		circle(ctx, 7,  0.7,0.1, self._color_wd, now.weekday()+now.hour/24.0+now.minute/(24*60.0))
 		circle(ctx, 24, 0.4,0.2, self._color_hr, now.hour+now.minute/60.0, 4)
 		circle(ctx, 3, 0.2,0.1, self._color_mn, now.minute/20.0)
