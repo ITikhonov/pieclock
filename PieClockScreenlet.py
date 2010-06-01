@@ -13,6 +13,14 @@ from gobject import timeout_add
 
 def deg(a): return a*(pi/180)
 
+def circle(ctx,parts,r,w,c,v,b=10):
+	ctx.set_operator(OPERATOR_OVER)
+	wl=360.0/parts
+	for i in range(0,parts):
+		pie(ctx,(wl*i,wl*i+wl-b),(r,r+w),c)
+	ctx.set_operator(OPERATOR_DEST_OUT)
+	pie(ctx, (0,wl*int(v) + (wl-b)*(v-int(v)) ), (r-0.1,r+w+0.1),(1.0,1.0,1.0,0.8))
+
 def pie(ctx,a,r,c):
 	a=deg(a[0]-90),deg(a[1]-90)
 	if len(c)==3: ctx.set_source_rgb(*c)
@@ -53,26 +61,11 @@ class PieClockScreenlet (Screenlet):
 
 		now=datetime.now()
 
-		wl=360/7.0
-		for i in range(0,7):
-			pie(ctx,(wl*i,wl*i+wl-4),(0.8,0.9),self._color_wd)
-		ctx.set_operator(OPERATOR_DEST_OUT)
-		pie(ctx,(0,wl*now.weekday()+(wl-4)*(now.hour/24.0+now.minute/(24*60.0))),(0.7,1),(1.0,1.0,1.0,0.8))
+		circle(ctx, 7,  0.7,0.1, self._color_wd, now.weekday()+now.hour/24.0+now.minute/(24*60.0))
+		circle(ctx, 24, 0.4,0.2, self._color_hr, now.hour+now.minute/60.0, 4)
+		circle(ctx, 3, 0.2,0.1, self._color_mn, now.minute/20.0)
+		circle(ctx, 3, 0.01,0.1, self._color_sc, (now.second + now.microsecond/1000000.0)/20.0 )
 
-		ctx.set_operator(OPERATOR_OVER)
-		for i in range(0,24):
-			pie(ctx,(15*i,15*i+11),(0.6,0.7),self._color_hr)
-		ctx.set_operator(OPERATOR_DEST_OUT)
-		pie(ctx,(0,15*now.hour+11*(now.minute/60.0)),(0.5,0.8),(0.0,1.0,0.0,0.8))
-
-		ctx.set_operator(OPERATOR_OVER)
-		for i in range(0,3):
-			pie(ctx,(120*i,120*i+110),(0.3,0.5),self._color_mn)
-		ctx.set_operator(OPERATOR_DEST_OUT)
-		pie(ctx,(0,120*(now.minute/20)+(110/20.0)*((now.minute%20)+now.second/60.0)),(0.2,0.6),(0.0,1.0,0.0,0.8))
-
-		ctx.set_operator(OPERATOR_OVER)
-		pie(ctx,(6*(now.second+now.microsecond/1000000.0),360),(0.1,0.2),self._color_sc)
 
 if __name__ == "__main__":
 	import screenlets.session
