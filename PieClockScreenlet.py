@@ -15,11 +15,12 @@ from calendar import monthrange,isleap
 
 def deg(a): return a*(pi/180)
 
-def circle(ctx,parts,r,w,c,v,b=10):
+def circle(ctx,parts,r,w,c,v,b=10,d=0.5):
 	ctx.set_operator(OPERATOR_OVER)
 	wl=360.0/parts
 	for i in range(0,parts):
-		pie(ctx,(wl*i,wl*i+wl-b),(r,r+w),c)
+		dr=1-d*(i%2)
+		pie(ctx,(wl*i,wl*i+wl-b),(r,r+w*dr),c)
 	ctx.set_operator(OPERATOR_DEST_OUT)
 	pie(ctx, (0,wl*int(v) + (wl-b)*(v-int(v)) ), (r-0.01,r+w+0.01),(1.0,1.0,1.0,0.8))
 
@@ -68,12 +69,12 @@ class PieClockScreenlet (Screenlet):
 		mr=monthrange(now.year,now.month)[1]
 		dr=365+isleap(now.year)
 
-		circle(ctx, 4,  0.9,0.1, self._color_yd, (now-datetime(now.year,1,1)).days/float(dr))
-		circle(ctx, mr,  0.8,0.1, self._color_md, now.day+now.hour/24.0+now.minute/(24*60.0), 2)
-		circle(ctx, 7,  0.65,0.1, self._color_wd, now.weekday()+now.hour/24.0+now.minute/(24*60.0))
-		circle(ctx, 24, 0.4,0.2, self._color_hr, now.hour+now.minute/60.0, 4)
-		circle(ctx, 3, 0.2,0.1, self._color_mn, now.minute/20.0)
-		circle(ctx, 3, 0.01,0.1, self._color_sc, (now.second + now.microsecond/1000000.0)/20.0 )
+		circle(ctx, 4,  0.9,0.1, self._color_yd, (now-datetime(now.year,1,1)).days/float(dr),2,d=0)
+		circle(ctx, mr,  0.775,0.1, self._color_md, now.day+now.hour/24.0+now.minute/(24*60.0), 0)
+		circle(ctx, 7,  0.65,0.1, self._color_wd, now.weekday()+now.hour/24.0+now.minute/(24*60.0),d=0)
+		circle(ctx, 24, 0.35,0.15, self._color_hr, now.hour+now.minute/60.0, 0)
+		circle(ctx, 3, 0.2,0.1, self._color_mn, now.minute/20.0,d=0)
+		circle(ctx, 2, 0.01,0.1, self._color_sc, (now.second + now.microsecond/1000000.0)/20.0,d=0)
 
 
 if __name__ == "__main__":
