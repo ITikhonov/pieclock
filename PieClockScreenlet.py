@@ -70,9 +70,9 @@ class PieClockScreenlet (Screenlet):
 		dr=365+isleap(now.year)
 
 		circle(ctx, 4,  0.9,0.1, self._color_yd, (now-datetime(now.year,1,1)).days/float(dr),2,d=0)
-		circle(ctx, mr,  0.775,0.1, self._color_md, now.day+now.hour/24.0+now.minute/(24*60.0), 0)
+		circle(ctx, mr,  0.775,0.1, self._color_md, now.day+now.hour/24.0+now.minute/(24*60.0), 4, 0.2)
 		circle(ctx, 7,  0.65,0.1, self._color_wd, now.weekday()+now.hour/24.0+now.minute/(24*60.0),d=0)
-		circle(ctx, 24, 0.35,0.15, self._color_hr, now.hour+now.minute/60.0, 0)
+		circle(ctx, 24, 0.35,0.15, self._color_hr, now.hour+now.minute/60.0, 4, 0.2)
 		circle(ctx, 3, 0.2,0.1, self._color_mn, now.minute/20.0,d=0)
 		circle(ctx, 2, 0.01,0.1, self._color_sc, (now.second + now.microsecond/1000000.0)/30.0,d=0)
 
